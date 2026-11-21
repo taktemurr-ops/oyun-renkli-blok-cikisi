@@ -40,11 +40,8 @@ class ExitRules extends GameRules<ExitLevel> {
     for (final c in colors) {
       if (!level.doors.any((d) => d.color == c)) return const Validation.fail('missing door');
     }
-    final sol = ExitBoard(level).solve(level.start, cap: 25000);
+    final sol = ExitBoard(level).solve(level.start, cap: 20000);
     if (sol == null) return const Validation.fail('not solvable');
-    // Zor bölümlerde hamle sayısı, çıkacak bloktan belirgin şekilde fazla olsun.
-    final minExtra = (level.difficulty ~/ 4).clamp(0, 2);
-    if (sol.length < movable + minExtra) return const Validation.fail('too easy');
     return Validation.ok(sol.length);
   }
 

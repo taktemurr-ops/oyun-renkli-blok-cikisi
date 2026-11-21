@@ -145,10 +145,10 @@ class ExitBoard {
 ExitLevel generateExitLevel(LevelSpec spec) {
   final r = SeededRandom(mixSeed([spec.seed, 8181]));
   final d = spec.difficulty.clamp(1, 10);
-  final w = d >= 7 ? 7 : (d >= 4 ? 6 : 5), h = w + (d >= 5 ? 1 : 0);
-  final colors = (2 + d ~/ 3).clamp(2, 5);
-  final nBlocks = (3 + d ~/ 2).clamp(3, 7);
-  final stones = d >= 8 ? r.nextInt(3) : 0;
+  final w = d >= 5 ? 6 : 5, h = w + (d >= 8 ? 1 : 0);
+  final colors = (2 + d ~/ 4).clamp(2, 4);
+  final nBlocks = (2 + d ~/ 3).clamp(3, 4);
+  final stones = d >= 8 ? 1 + r.nextInt(3) : (d >= 5 ? r.nextInt(2) : 0);
   final blocks = <CBlock>[];
   final pos = <int>[];
   final occ = List<bool>.filled(w * h, false);
@@ -201,9 +201,9 @@ ExitLevel generateExitLevel(LevelSpec spec) {
       final horizontalWall = side == 0 || side == 2;
       final size = horizontalWall ? b.w : b.h;
       final span = horizontalWall ? w : h;
-      final extra = d >= 9 ? 0 : 1;
+      const extra = 1;
       final len = (size + extra).clamp(1, span);
-      final start = ((horizontalWall ? bx : by) - (extra > 0 && r.chance(0.5) ? 1 : 0)).clamp(0, span - len);
+      final start = ((horizontalWall ? bx : by) - (r.chance(0.5) ? 1 : 0)).clamp(0, span - len);
       if (overlaps(side, start, len)) continue;
       doors.add(Door(side, start, len, c));
       break;
