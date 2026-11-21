@@ -185,17 +185,26 @@ ExitLevel generateExitLevel(LevelSpec spec) {
   for (var k = 0; k < stones; k++) {
     place(const CBlock(1, 1, -1));
   }
-  // Her renk için bir kapı (zor bölümlerde dar kapılar).
+  // Her renk için bir kapı: o rengin ilk bloğunun satırı/sütunu hizasında.
+  // Böylece bölüm çoğunlukla çözülebilir; aynı renkteki diğer bloklar o
+  // hizaya getirilmek zorundadır.
   final doors = <Door>[];
-  final usedSides = <String>{};
+  bool overlaps(int side, int start, int len) =>
+      doors.any((o) => o.side == side && start < o.start + o.len && o.start < start + len);
   for (var c = 0; c < colors; c++) {
-    for (var t = 0; t < 20; t++) {
-      final side = r.nextInt(4);
-      final span = side == 0 || side == 2 ? w : h;
-      final len = d >= 9 ? 2 : 3;
-      final start = r.nextInt(span - len + 1);
-      final k = '$side:${start ~/ 2}';
-      if (!usedSides.add(k)) continue;
+    final i = [for (var k = 0; k < blocks.length; k++) if (blocks[k].color == c) k].firstOrNull;
+    if (i == null) continue;
+    final b = blocks[i], bx = pos[i] ~/ 100, by = pos[i] % 100;
+    final sides = [0, 1, 2, 3];
+    r.shuffle(sides);
+    for (final side in sides) {
+      final horizontalWall = side == 0 || side == 2;
+      final size = horizontalWall ? b.w : b.h;
+      final span = horizontalWall ? w : h;
+      final extra = d >= 9 ? 0 : 1;
+      final len = (size + extra).clamp(1, span);
+      final start = ((horizontalWall ? bx : by) - (extra > 0 && r.chance(0.5) ? 1 : 0)).clamp(0, span - len);
+      if (overlaps(side, start, len)) continue;
       doors.add(Door(side, start, len, c));
       break;
     }
