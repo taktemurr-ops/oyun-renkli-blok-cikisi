@@ -147,8 +147,8 @@ ExitLevel generateExitLevel(LevelSpec spec) {
   final d = spec.difficulty.clamp(1, 10);
   final w = d >= 7 ? 7 : (d >= 4 ? 6 : 5), h = w + (d >= 5 ? 1 : 0);
   final colors = (2 + d ~/ 3).clamp(2, 5);
-  final nBlocks = (3 + d ~/ 2).clamp(3, 8);
-  final stones = d >= 6 ? r.nextInt(3) : 0;
+  final nBlocks = (3 + d ~/ 2).clamp(3, 7);
+  final stones = d >= 8 ? r.nextInt(3) : 0;
   final blocks = <CBlock>[];
   final pos = <int>[];
   final occ = List<bool>.filled(w * h, false);
@@ -192,7 +192,7 @@ ExitLevel generateExitLevel(LevelSpec spec) {
     for (var t = 0; t < 20; t++) {
       final side = r.nextInt(4);
       final span = side == 0 || side == 2 ? w : h;
-      final len = d >= 6 ? 2 : 3;
+      final len = d >= 9 ? 2 : 3;
       final start = r.nextInt(span - len + 1);
       final k = '$side:${start ~/ 2}';
       if (!usedSides.add(k)) continue;
