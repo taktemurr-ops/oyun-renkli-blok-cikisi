@@ -80,7 +80,7 @@ final renkliCikisConfig = GameConfig(
       'Mỗi khối qua cửa cùng màu!',
       'Bawat bloke sa pinto ng sarili nitong kulay!',
     ],
-  seedColor: const Color(0xFF7E57C2),
+  seedColor: const Color(0xFF8C4FB0),
   icon: Icons.door_sliding_rounded,
   rules: ExitRules(),
   buildPlay: (ctx) => ExitView(ctx: ctx),
