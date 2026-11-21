@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:studio_core/core/strings.dart';
 import 'package:studio_core/app/game_api.dart';
 import 'package:studio_core/app/services/audio.dart';
 import 'package:studio_core/core/game_rules.dart';
@@ -29,7 +30,6 @@ class _ExitViewState extends State<ExitView> {
   double _cell = 40;
 
   PlayContext get ctx => widget.ctx;
-  bool get _tr => ctx.lang == 'tr';
 
   @override
   void initState() {
@@ -100,9 +100,7 @@ class _ExitViewState extends State<ExitView> {
           child: Row(children: [
             Expanded(
               child: Text(
-                  _tr
-                      ? 'Hamle: ${game.moves}  ·  En az: ${level.optimal}'
-                      : 'Moves: ${game.moves}  ·  Best: ${level.optimal}',
+                  Strings.tx(ctx.lang, 'Hamle: {0}  ·  En az: {1}', 'Moves: {0}  ·  Best: {1}', [game.moves, level.optimal]),
                   style: Theme.of(context).textTheme.titleSmall),
             ),
             const Icon(Icons.timer_outlined, size: 18),
