@@ -6,19 +6,36 @@ import 'package:studio_core/core/strings.dart';
 import 'package:studio_core/app/game_api.dart';
 import 'package:studio_core/app/services/audio.dart';
 import 'package:studio_core/core/game_rules.dart';
+import 'package:studio_core/app/studio_ui.dart';
 
 import 'exit_engine.dart';
 import 'exit_rules.dart';
 
-class ExitView extends StatefulWidget {
+final Map<StudioLook, ThemeData> _studioThemes = {};
+
+/// Oyun ekranı: düğmeler, çipler, üst bilgi ve pencereler onaylı koyu
+/// tasarımda (merkezin paleti, studio-core StudioLook); tahta çizimi kendi
+/// renklerini korur.
+class ExitView extends StatelessWidget {
   final PlayContext ctx;
   const ExitView({super.key, required this.ctx});
 
   @override
-  State<ExitView> createState() => _ExitViewState();
+  Widget build(BuildContext context) {
+    final look = StudioLook.of(context);
+    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: ExitViewBody(ctx: ctx));
+  }
 }
 
-class _ExitViewState extends State<ExitView> {
+class ExitViewBody extends StatefulWidget {
+  final PlayContext ctx;
+  const ExitViewBody({super.key, required this.ctx});
+
+  @override
+  State<ExitViewBody> createState() => _ExitViewState();
+}
+
+class _ExitViewState extends State<ExitViewBody> {
   late ExitLevel level;
   late ExitGame game;
   int? _drag;
