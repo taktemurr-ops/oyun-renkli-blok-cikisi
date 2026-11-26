@@ -6,9 +6,12 @@ import 'package:studio_core/core/strings.dart';
 import 'package:studio_core/app/game_api.dart';
 import 'package:studio_core/app/services/audio.dart';
 import 'package:studio_core/core/game_rules.dart';
+import 'package:studio_core/app/studio_ui.dart';
 
 import 'exit_engine.dart';
 import 'exit_rules.dart';
+
+final Map<StudioLook, ThemeData> _studioThemes = {};
 
 class ExitView extends StatefulWidget {
   final PlayContext ctx;
@@ -89,8 +92,15 @@ class _ExitViewState extends State<ExitView> {
     _persist();
   }
 
+  /// Oyun içi düğmeler, çipler ve yazılar onaylı koyu tasarımda (merkezin
+  /// paleti); tahta çizimi kendi renklerini korur.
   @override
   Widget build(BuildContext context) {
+    final look = StudioLook.of(context);
+    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: Builder(builder: _build));
+  }
+
+  Widget _build(BuildContext context) {
     return LayoutBuilder(builder: (context, cons) {
       _cell = math.max(20.0, math.min((cons.maxWidth - 48) / level.w, cons.maxHeight * 0.68 / level.h));
       final pad = _cell * 0.35;
