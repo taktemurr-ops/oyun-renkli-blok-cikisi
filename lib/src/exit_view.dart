@@ -13,15 +13,29 @@ import 'exit_rules.dart';
 
 final Map<StudioLook, ThemeData> _studioThemes = {};
 
-class ExitView extends StatefulWidget {
+/// Oyun ekranı: düğmeler, çipler, üst bilgi ve pencereler onaylı koyu
+/// tasarımda (merkezin paleti, studio-core StudioLook); tahta çizimi kendi
+/// renklerini korur.
+class ExitView extends StatelessWidget {
   final PlayContext ctx;
   const ExitView({super.key, required this.ctx});
 
   @override
-  State<ExitView> createState() => _ExitViewState();
+  Widget build(BuildContext context) {
+    final look = StudioLook.of(context);
+    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: ExitViewBody(ctx: ctx));
+  }
 }
 
-class _ExitViewState extends State<ExitView> {
+class ExitViewBody extends StatefulWidget {
+  final PlayContext ctx;
+  const ExitViewBody({super.key, required this.ctx});
+
+  @override
+  State<ExitViewBody> createState() => _ExitViewState();
+}
+
+class _ExitViewState extends State<ExitViewBody> {
   late ExitLevel level;
   late ExitGame game;
   int? _drag;
@@ -92,15 +106,8 @@ class _ExitViewState extends State<ExitView> {
     _persist();
   }
 
-  /// Oyun içi düğmeler, çipler ve yazılar onaylı koyu tasarımda (merkezin
-  /// paleti); tahta çizimi kendi renklerini korur.
   @override
   Widget build(BuildContext context) {
-    final look = StudioLook.of(context);
-    return Theme(data: _studioThemes[look] ??= buildStudioTheme(look), child: Builder(builder: _build));
-  }
-
-  Widget _build(BuildContext context) {
     return LayoutBuilder(builder: (context, cons) {
       _cell = math.max(20.0, math.min((cons.maxWidth - 48) / level.w, cons.maxHeight * 0.68 / level.h));
       final pad = _cell * 0.35;
